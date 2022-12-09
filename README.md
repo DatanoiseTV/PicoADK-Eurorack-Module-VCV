@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/6614616/206706626-cb463a08-532b-4f51-8553-b15d4415e9d5.png)
+![image](https://user-images.githubusercontent.com/6614616/206707526-52873952-b8e0-4a7e-9e2a-dd4f2db8635c.png)
 
 Start-point to write your own plugins for the Datanoise Aurora board using the Vult language
 and transfer them to the [real hardware](https://github.com/DatanoiseTV/-PicoADK-Eurorack-Module) later on.
