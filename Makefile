@@ -1,5 +1,5 @@
 # If RACK_DIR is not defined when calling the Makefile, default to two directories above
-RACK_DIR ?= ../..
+RACK_DIR ?= /home/syso/dev/rack/Rack-SDK
 
 # FLAGS will be passed to both the C and C++ compiler
 FLAGS +=
@@ -25,7 +25,7 @@ VULT_SRC = $(wildcard src/*.vult)
 VULT_ENGINE_OUT = $(wildcard src/engine.*)
 
 $(VULT_ENGINE_OUT): $(VULT_SRC)
-	$(VULT_CMD) -ccode $(VULT_SRC) -o src/engine -force-write
+	$(VULT_CMD) -ccode $(VULT_SRC) -o src/engine -i src/util -force-write
 
 
 # Include the Rack plugin Makefile framework

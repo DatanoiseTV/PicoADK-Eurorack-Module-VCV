@@ -1,20 +1,20 @@
 {
-   "slug": "RackPlayground",
-   "name": "RackPlayground",
+   "slug": "DatanoiseAurora",
+   "name": "Aurora",
    "version": "2.0.0",
    "license": "MIT",
-   "brand": "Unofficial",
-   "author": "",
-   "authorEmail": "",
-   "authorUrl": "",
-   "pluginUrl": "",
+   "brand": "Datanoise",
+   "author": "Datanoise",
+   "authorEmail": "vcv@ext.no-route.org",
+   "authorUrl": "https://github.com/DatanoiseTV",
+   "pluginUrl": "https://github.com/DatanoiseTV/PicoADK-Eurorack-Module",
    "manualUrl": "",
    "sourceUrl": "",
    "donateUrl": "",
    "modules": [{
-      "slug": "Playground",
-      "name": "Playground",
-      "description": "I do nothing",
+      "slug": "Aurora",
+      "name": "Aurora",
+      "description": "A protototype module for building Eurorack modules with PicoADK",
       "tags": []
    }]
 }

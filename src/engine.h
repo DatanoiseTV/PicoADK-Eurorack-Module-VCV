@@ -7,121 +7,487 @@
 #include "vultin.h"
 #include "engine.tables.h"
 
-typedef struct _tuple___real_real_real_real__ {
+typedef struct _tuple___real_real_real_real_real_real__ {
    float field_0;
    float field_1;
    float field_2;
    float field_3;
-} _tuple___real_real_real_real__;
+   float field_4;
+   float field_5;
+} _tuple___real_real_real_real_real_real__;
 
-typedef struct Processor__ctx_type_0 {
+typedef struct Util__ctx_type_0 {
+   uint8_t pre;
+} Util__ctx_type_0;
+
+typedef Util__ctx_type_0 Util_edge_type;
+
+static_inline void Util__ctx_type_0_init(Util__ctx_type_0 &_output_){
+   Util__ctx_type_0 _ctx;
+   _ctx.pre = false;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Util_edge_init(Util__ctx_type_0 &_output_){
+   Util__ctx_type_0_init(_output_);
+   return ;
+}
+
+static_inline uint8_t Util_edge(Util__ctx_type_0 &_ctx, uint8_t x){
+   uint8_t ret;
+   ret = (x && bool_not(_ctx.pre));
+   _ctx.pre = x;
+   return ret;
+}
+
+typedef struct Util__ctx_type_1 {
+   float pre_x;
+} Util__ctx_type_1;
+
+typedef Util__ctx_type_1 Util_change_type;
+
+static_inline void Util__ctx_type_1_init(Util__ctx_type_1 &_output_){
+   Util__ctx_type_1 _ctx;
+   _ctx.pre_x = 0.0f;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Util_change_init(Util__ctx_type_1 &_output_){
+   Util__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline uint8_t Util_change(Util__ctx_type_1 &_ctx, float x){
+   uint8_t v;
+   v = (_ctx.pre_x != x);
+   _ctx.pre_x = x;
+   return v;
+}
+
+static_inline float Util_map(float x, float x0, float x1, float y0, float y1){
+   return (y0 + (((x + (- x0)) * (y1 + (- y0))) / (x1 + (- x0))));
+};
+
+typedef struct Util__ctx_type_3 {
+   float y1;
+   float x1;
+} Util__ctx_type_3;
+
+typedef Util__ctx_type_3 Util_dcblock_type;
+
+void Util__ctx_type_3_init(Util__ctx_type_3 &_output_);
+
+static_inline void Util_dcblock_init(Util__ctx_type_3 &_output_){
+   Util__ctx_type_3_init(_output_);
+   return ;
+}
+
+float Util_dcblock(Util__ctx_type_3 &_ctx, float x0);
+
+typedef struct Util__ctx_type_4 {
+   float x;
+} Util__ctx_type_4;
+
+typedef Util__ctx_type_4 Util_smooth_type;
+
+static_inline void Util__ctx_type_4_init(Util__ctx_type_4 &_output_){
+   Util__ctx_type_4 _ctx;
+   _ctx.x = 0.0f;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Util_smooth_init(Util__ctx_type_4 &_output_){
+   Util__ctx_type_4_init(_output_);
+   return ;
+}
+
+static_inline float Util_smooth(Util__ctx_type_4 &_ctx, float input){
+   _ctx.x = (_ctx.x + (0.005f * (input + (- _ctx.x))));
+   return _ctx.x;
+}
+
+typedef struct Util__ctx_type_5 {
+   float x0;
+} Util__ctx_type_5;
+
+typedef Util__ctx_type_5 Util_average2_type;
+
+static_inline void Util__ctx_type_5_init(Util__ctx_type_5 &_output_){
+   Util__ctx_type_5 _ctx;
+   _ctx.x0 = 0.0f;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Util_average2_init(Util__ctx_type_5 &_output_){
+   Util__ctx_type_5_init(_output_);
+   return ;
+}
+
+static_inline float Util_average2(Util__ctx_type_5 &_ctx, float x1){
+   float result;
+   result = (0.5f * (_ctx.x0 + x1));
+   _ctx.x0 = x1;
+   return result;
+}
+
+static_inline float Util_cubic_clipper(float x){
+   if(x <= -0.666666666667f){
+      return -0.666666666667f;
+   }
+   else
+   {
+      if(x >= 0.666666666667f){
+         return 0.666666666667f;
+      }
+      else
+      {
+         return (x + (-0.333333333333f * x * x * x));
+      }
+   }
+};
+
+static_inline float Util_pitchToRate_1024_raw_c0(int index){
+   return Util_pitchToRate_1024_c0[index];
+};
+
+static_inline float Util_pitchToRate_1024_raw_c1(int index){
+   return Util_pitchToRate_1024_c1[index];
+};
+
+static_inline float Util_pitchToRate_1024_raw_c2(int index){
+   return Util_pitchToRate_1024_c2[index];
+};
+
+static_inline float Util_pitchToRate_1024(float pitch){
+   int index;
+   index = int_clip(float_to_int((0.244094488189f * pitch)),0,31);
+   return (float_wrap_array(Util_pitchToRate_1024_c0)[index] + (pitch * (float_wrap_array(Util_pitchToRate_1024_c1)[index] + (pitch * float_wrap_array(Util_pitchToRate_1024_c2)[index]))));
+}
+
+static_inline float Util_pitchToRate_raw_c0(int index){
+   return Util_pitchToRate_c0[index];
+};
+
+static_inline float Util_pitchToRate_raw_c1(int index){
+   return Util_pitchToRate_c1[index];
+};
+
+static_inline float Util_pitchToRate_raw_c2(int index){
+   return Util_pitchToRate_c2[index];
+};
+
+static_inline float Util_pitchToRate(float pitch){
+   int index;
+   index = int_clip(float_to_int((0.244094488189f * pitch)),0,31);
+   return (float_wrap_array(Util_pitchToRate_c0)[index] + (pitch * (float_wrap_array(Util_pitchToRate_c1)[index] + (pitch * float_wrap_array(Util_pitchToRate_c2)[index]))));
+}
+
+static_inline float Util_cvToPitch(float cv){
+   return (24.f + (120.f * cv));
+};
+
+static_inline float Util_cvToRate_1024_raw_c0(int index){
+   return Util_cvToRate_1024_c0[index];
+};
+
+static_inline float Util_cvToRate_1024_raw_c1(int index){
+   return Util_cvToRate_1024_c1[index];
+};
+
+static_inline float Util_cvToRate_1024_raw_c2(int index){
+   return Util_cvToRate_1024_c2[index];
+};
+
+static_inline float Util_cvToRate_1024(float cv){
+   int index;
+   index = int_clip(float_to_int((34.4444444444f * cv)),0,31);
+   return (float_wrap_array(Util_cvToRate_1024_c0)[index] + (cv * (float_wrap_array(Util_cvToRate_1024_c1)[index] + (cv * float_wrap_array(Util_cvToRate_1024_c2)[index]))));
+}
+
+static_inline float Util_cvToRate_raw_c0(int index){
+   return Util_cvToRate_c0[index];
+};
+
+static_inline float Util_cvToRate_raw_c1(int index){
+   return Util_cvToRate_c1[index];
+};
+
+static_inline float Util_cvToRate_raw_c2(int index){
+   return Util_cvToRate_c2[index];
+};
+
+static_inline float Util_cvToRate(float cv){
+   int index;
+   index = int_clip(float_to_int((141.111111111f * cv)),0,127);
+   return (float_wrap_array(Util_cvToRate_c0)[index] + (cv * (float_wrap_array(Util_cvToRate_c1)[index] + (cv * float_wrap_array(Util_cvToRate_c2)[index]))));
+}
+
+static_inline float Util_pitchToCv(float pitch){
+   return (0.00833333333333f * (-24.f + pitch));
+};
+
+static_inline float Util_cvToperiod_raw_c0(int index){
+   return Util_cvToperiod_c0[index];
+};
+
+static_inline float Util_cvToperiod_raw_c1(int index){
+   return Util_cvToperiod_c1[index];
+};
+
+static_inline float Util_cvToperiod_raw_c2(int index){
+   return Util_cvToperiod_c2[index];
+};
+
+static_inline float Util_cvToperiod(float cv){
+   int index;
+   index = int_clip(float_to_int((31.f * cv)),0,31);
+   return (float_wrap_array(Util_cvToperiod_c0)[index] + (cv * (float_wrap_array(Util_cvToperiod_c1)[index] + (cv * float_wrap_array(Util_cvToperiod_c2)[index]))));
+}
+
+static_inline float Util_cvTokHz_raw_c0(int index){
+   return Util_cvTokHz_c0[index];
+};
+
+static_inline float Util_cvTokHz_raw_c1(int index){
+   return Util_cvTokHz_c1[index];
+};
+
+static_inline float Util_cvTokHz_raw_c2(int index){
+   return Util_cvTokHz_c2[index];
+};
+
+static_inline float Util_cvTokHz(float cv){
+   int index;
+   index = int_clip(float_to_int((31.f * cv)),0,31);
+   return (float_wrap_array(Util_cvTokHz_c0)[index] + (cv * (float_wrap_array(Util_cvTokHz_c1)[index] + (cv * float_wrap_array(Util_cvTokHz_c2)[index]))));
+}
+
+typedef struct Aurora__ctx_type_0 {
+   float x4;
+   float x3;
+   float x2;
+} Aurora__ctx_type_0;
+
+typedef Aurora__ctx_type_0 Aurora_soft_type;
+
+void Aurora__ctx_type_0_init(Aurora__ctx_type_0 &_output_);
+
+static_inline void Aurora_soft_init(Aurora__ctx_type_0 &_output_){
+   Aurora__ctx_type_0_init(_output_);
+   return ;
+}
+
+float Aurora_soft(Aurora__ctx_type_0 &_ctx, float x1);
+
+typedef struct Aurora__ctx_type_1 {
+   float rate;
+   float phase;
+   Aurora__ctx_type_0 _inst560;
+   Util__ctx_type_0 _inst351;
+   Util__ctx_type_1 _inst13b;
+} Aurora__ctx_type_1;
+
+typedef Aurora__ctx_type_1 Aurora_lfo_type;
+
+void Aurora__ctx_type_1_init(Aurora__ctx_type_1 &_output_);
+
+static_inline void Aurora_lfo_init(Aurora__ctx_type_1 &_output_){
+   Aurora__ctx_type_1_init(_output_);
+   return ;
+}
+
+float Aurora_lfo(Aurora__ctx_type_1 &_ctx, float cv, float shape, float reset);
+
+typedef struct Aurora__ctx_type_2 {
+   float process_ret_5;
+   float process_ret_4;
    float process_ret_3;
    float process_ret_2;
    float process_ret_1;
    float process_ret_0;
+   float param8;
+   float param7;
+   float param6;
+   float param5;
    float param4;
    float param3;
    float param2;
    float param1;
-} Processor__ctx_type_0;
+   Aurora__ctx_type_1 _inst696;
+   Aurora__ctx_type_1 _inst596;
+   Aurora__ctx_type_1 _inst496;
+   Aurora__ctx_type_1 _inst396;
+   Aurora__ctx_type_1 _inst296;
+   Aurora__ctx_type_1 _inst196;
+} Aurora__ctx_type_2;
 
-typedef Processor__ctx_type_0 Processor_process_type;
+typedef Aurora__ctx_type_2 Aurora_process_type;
 
-void Processor__ctx_type_0_init(Processor__ctx_type_0 &_output_);
+void Aurora__ctx_type_2_init(Aurora__ctx_type_2 &_output_);
 
-static_inline void Processor_process_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-void Processor_process(Processor__ctx_type_0 &_ctx, float in1, float in2, float in3, float in4, float fs);
+void Aurora_process(Aurora__ctx_type_2 &_ctx, float in1, float in2, float in3, float in4, float in5, float in6, float in7, float in8, float fs);
 
-typedef Processor__ctx_type_0 Processor_process_ret_0_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_0_type;
 
-static_inline void Processor_process_ret_0_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_0_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline float Processor_process_ret_0(Processor__ctx_type_0 &_ctx){
+static_inline float Aurora_process_ret_0(Aurora__ctx_type_2 &_ctx){
    return _ctx.process_ret_0;
 };
 
-typedef Processor__ctx_type_0 Processor_process_ret_1_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_1_type;
 
-static_inline void Processor_process_ret_1_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_1_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline float Processor_process_ret_1(Processor__ctx_type_0 &_ctx){
+static_inline float Aurora_process_ret_1(Aurora__ctx_type_2 &_ctx){
    return _ctx.process_ret_1;
 };
 
-typedef Processor__ctx_type_0 Processor_process_ret_2_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_2_type;
 
-static_inline void Processor_process_ret_2_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_2_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline float Processor_process_ret_2(Processor__ctx_type_0 &_ctx){
+static_inline float Aurora_process_ret_2(Aurora__ctx_type_2 &_ctx){
    return _ctx.process_ret_2;
 };
 
-typedef Processor__ctx_type_0 Processor_process_ret_3_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_3_type;
 
-static_inline void Processor_process_ret_3_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_3_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline float Processor_process_ret_3(Processor__ctx_type_0 &_ctx){
+static_inline float Aurora_process_ret_3(Aurora__ctx_type_2 &_ctx){
    return _ctx.process_ret_3;
 };
 
-typedef Processor__ctx_type_0 Processor_setParam1_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_4_type;
 
-static_inline void Processor_setParam1_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_4_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline void Processor_setParam1(Processor__ctx_type_0 &_ctx, float knob, float mod, float input){
-   _ctx.param1 = float_clip((knob + (input * mod)),0.0f,1.f);
+static_inline float Aurora_process_ret_4(Aurora__ctx_type_2 &_ctx){
+   return _ctx.process_ret_4;
 };
 
-typedef Processor__ctx_type_0 Processor_setParam2_type;
+typedef Aurora__ctx_type_2 Aurora_process_ret_5_type;
 
-static_inline void Processor_setParam2_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_process_ret_5_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline void Processor_setParam2(Processor__ctx_type_0 &_ctx, float knob, float mod, float input){
-   _ctx.param2 = float_clip((knob + (input * mod)),0.0f,1.f);
+static_inline float Aurora_process_ret_5(Aurora__ctx_type_2 &_ctx){
+   return _ctx.process_ret_5;
 };
 
-typedef Processor__ctx_type_0 Processor_setParam3_type;
+typedef Aurora__ctx_type_2 Aurora_setParam1_type;
 
-static_inline void Processor_setParam3_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_setParam1_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline void Processor_setParam3(Processor__ctx_type_0 &_ctx, float knob, float mod, float input){
-   _ctx.param3 = float_clip((knob + (input * mod)),0.0f,1.f);
+static_inline void Aurora_setParam1(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param1 = float_clip(knob,0.0f,1.f);
 };
 
-typedef Processor__ctx_type_0 Processor_setParam4_type;
+typedef Aurora__ctx_type_2 Aurora_setParam2_type;
 
-static_inline void Processor_setParam4_init(Processor__ctx_type_0 &_output_){
-   Processor__ctx_type_0_init(_output_);
+static_inline void Aurora_setParam2_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
    return ;
 }
 
-static_inline void Processor_setParam4(Processor__ctx_type_0 &_ctx, float knob, float mod, float input){
-   _ctx.param4 = float_clip((knob + (input * mod)),0.0f,1.f);
+static_inline void Aurora_setParam2(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param2 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam3_type;
+
+static_inline void Aurora_setParam3_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam3(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param3 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam4_type;
+
+static_inline void Aurora_setParam4_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam4(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param4 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam5_type;
+
+static_inline void Aurora_setParam5_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam5(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param5 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam6_type;
+
+static_inline void Aurora_setParam6_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam6(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param6 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam7_type;
+
+static_inline void Aurora_setParam7_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam7(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param7 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_2 Aurora_setParam8_type;
+
+static_inline void Aurora_setParam8_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam8(Aurora__ctx_type_2 &_ctx, float knob){
+   _ctx.param8 = float_clip(knob,0.0f,1.f);
 };
 
 
