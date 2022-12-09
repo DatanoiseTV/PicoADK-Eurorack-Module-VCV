@@ -1,0 +1,107 @@
+/* Demo 1 */
+
+// A few utility functions
+
+// Converts the MIDI note to increment rate at a 44100 sample rate
+fun pitchToRate(d)
+  return 8.1758*exp(0.0577623*d)/44100.0;
+
+// Returns true every time the input value changes
+fun change(x:real) {
+    mem pre_x;
+    val v = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+fun svf_step(input,g,q,sel) : real {
+   mem dlow, dband;
+   val low = dlow + g * dband;
+   val high = input - low - q*dband;
+   val band = g * high + dband;
+   val notch = high + low;
+
+   dband = clip(band,-1.,1.);
+   dlow  = clip(low,-1.,1.);
+   val output =
+      if sel == 0 then low else
+      if sel == 1 then high else
+      if sel == 2 then band else
+      notch;
+   return output;
+}
+
+// Main function for the state-variable filter with 2x of oversampling
+fun svf(input,fc,q,sel){
+   mem g;
+   fc = clip(fc, 0., 1.);
+   q  = clip(q, 0., 1.);
+   val fix_q = 2. * (1. - q);
+
+   if(change(fc)){
+      g = fc/2.;
+   }
+
+   // In Vult oversamplig in very easy!
+   val x1 = step:svf_step(input,g,fix_q,sel);
+   val x2 = step:svf_step(input,g,fix_q,sel);
+
+   return (x1+x2)/2.;
+}
+
+
+fun phasor(pitch) {
+   mem phase;
+   val rate = pitchToRate(pitch);
+   phase = (phase + rate) % 1.0;
+   return phase;
+}
+
+
+// Main processing function
+fun process(input:real){
+   // pre-mapped controls
+   mem cc30,cc31,cc32,cc33;
+   mem cc34,cc35,cc36,cc37;
+   mem cc38,cc39,cc40,cc41;
+
+   mem pitch;
+
+   val o1 = phasor(pitch);
+   val o2 = phasor(pitch + cc30 * 12.0);
+   val o3 = phasor(pitch + cc31 * 12.0);
+
+   val o4 = phasor(-28.0);
+
+   return 0.3 * svf(o1+o2+o3,o4,cc33,0);
+}
+
+// Called when a note On is received
+and noteOn(note:int,velocity:int,channel:int){
+   pitch = real(note);
+}
+
+// Called when a note Off is received
+and noteOff(note:int,channel:int){
+}
+
+// Called when a control changes
+and controlChange(control:int,value:int,channel:int){
+   val normalized = real(value)/127.0;
+   if(control==30) cc30 = normalized;
+   if(control==31) cc31 = normalized;
+   if(control==32) cc32 = normalized;
+   if(control==33) cc33 = normalized;
+   if(control==34) cc34 = normalized;
+   if(control==35) cc35 = normalized;
+   if(control==36) cc36 = normalized;
+   if(control==37) cc37 = normalized;
+   if(control==38) cc38 = normalized;
+   if(control==39) cc39 = normalized;
+   if(control==40) cc40 = normalized;
+   if(control==41) cc41 = normalized;
+}
+
+// Called on initialization to define initial values
+and default(){
+}

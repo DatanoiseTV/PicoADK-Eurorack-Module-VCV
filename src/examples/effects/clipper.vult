@@ -1,0 +1,15 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2017 Leonardo Laguna Ruiz
+-----
+Cubic clipper satuation
+*/
+
+fun process(x) {
+   return Util.cubic_clipper(x);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default() { }

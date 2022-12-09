@@ -1,0 +1,72 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2017 Leonardo Laguna Ruiz
+-----
+Saw oscillator using BLIT synthesis. This is a simplified version of blit.vult
+*/
+
+// Generates a BW-limited pulse train given the phase and the number of harmonics
+fun pulse_train(cv, phase){
+   mem m, new_m, scale;
+   if(Util.change(cv)){
+      new_m = 2 * int(Util.cvToperiod(cv)) + 1;
+      scale = 2.0 * Util.cvToperiod(cv);
+   }
+   val pi_phase = phase / 2.0;
+   val denominator = Tables.nsine(pi_phase);
+   if(new_m <> m && denominator < 0.1) {
+      m = new_m;
+   }
+   val out = 0.;
+   if(denominator <= eps()) {
+      out = 1.;
+   }
+   else {
+      val m_phase = (real(m) * pi_phase) % 1.0;
+      val numerator = Tables.nsine(m_phase);
+      out =  numerator / (scale * denominator);
+   }
+   return out;
+}
+and pulse_start() @[init] {
+   m = 2 * int(Util.cvToperiod(0.0)) + 1;
+   scale = 2.0 * Util.cvToperiod(0.0) + 1.0;
+}
+
+fun do(cv) {
+   mem rate;
+   mem output;
+   mem phase;
+   mem state;
+
+   // Updates the parameters if the cv changed
+   if(Util.change(cv)) {
+      rate = Util.cvToRate(cv);
+   }
+
+   phase = phase + rate;
+   phase = if phase > 1.0 then phase - 1.0 else phase;
+
+   // Generates a pulse train
+   val pulse = pulse_train(cv, phase);
+
+   mem state = state * 0.99 + pulse - rate;
+
+   output = Util.dcblock(state);
+
+   return output;
+}
+and do_default() @[init] {
+   rate = Util.cvToRate(0.0);
+}
+
+fun process(cv) {
+   val output = osc:do(cv);
+   return output;
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default() {
+}

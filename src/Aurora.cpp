@@ -92,7 +92,7 @@ void Aurora::process(const ProcessArgs &args) {
 
    {
       float knob1 = params[KNOB1].getValue();
-      float knob2 = params[KNOB2].getValue();
+      float knob2 = params[KNOB2].getValue() / 100.0f;
       float knob3 = params[KNOB3].getValue();
       float knob4 = params[KNOB4].getValue();
       float knob5 = params[KNOB5].getValue();
@@ -109,7 +109,7 @@ void Aurora::process(const ProcessArgs &args) {
       
    }
 
-   Aurora_process(aurora, in1, in2, in3, in4, in5, in6, in7, in8, args.sampleRate);
+   Aurora_process(aurora, in1, in2, in3, in4, in5, in6, in7, in8, gate1, gate2, args.sampleRate);
 
    outputs[AUDIO_L].setVoltage(Aurora_process_ret_0(aurora) * 10.0f);
 

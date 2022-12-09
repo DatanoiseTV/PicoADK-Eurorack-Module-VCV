@@ -7,6 +7,11 @@
 #include "vultin.h"
 #include "engine.tables.h"
 
+typedef struct _tuple___bool_real__ {
+   uint8_t field_0;
+   float field_1;
+} _tuple___bool_real__;
+
 typedef struct _tuple___real_real_real_real_real_real__ {
    float field_0;
    float field_1;
@@ -266,6 +271,609 @@ static_inline float Util_cvTokHz(float cv){
    return (float_wrap_array(Util_cvTokHz_c0)[index] + (cv * (float_wrap_array(Util_cvTokHz_c1)[index] + (cv * float_wrap_array(Util_cvTokHz_c2)[index]))));
 }
 
+typedef struct Adsr__ctx_type_0 {
+   float target;
+   int state;
+   float scale;
+   float rate;
+   float out;
+   Util__ctx_type_4 _inst955;
+   Util__ctx_type_0 _inst251;
+} Adsr__ctx_type_0;
+
+typedef Adsr__ctx_type_0 Adsr_do_type;
+
+void Adsr__ctx_type_0_init(Adsr__ctx_type_0 &_output_);
+
+static_inline void Adsr_do_init(Adsr__ctx_type_0 &_output_){
+   Adsr__ctx_type_0_init(_output_);
+   return ;
+}
+
+float Adsr_do(Adsr__ctx_type_0 &_ctx, float gate, float a, float d, float s, float r);
+
+typedef struct Adsr__ctx_type_1 {
+   float knob4;
+   float knob3;
+   float knob2;
+   float knob1;
+   Adsr__ctx_type_0 _inst16;
+} Adsr__ctx_type_1;
+
+typedef Adsr__ctx_type_1 Adsr_process_type;
+
+void Adsr__ctx_type_1_init(Adsr__ctx_type_1 &_output_);
+
+static_inline void Adsr_process_init(Adsr__ctx_type_1 &_output_){
+   Adsr__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline float Adsr_process(Adsr__ctx_type_1 &_ctx, float gate){
+   return Adsr_do(_ctx._inst16,gate,_ctx.knob1,_ctx.knob2,_ctx.knob3,_ctx.knob4);
+};
+
+typedef Adsr__ctx_type_1 Adsr_noteOn_type;
+
+static_inline void Adsr_noteOn_init(Adsr__ctx_type_1 &_output_){
+   Adsr__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Adsr_noteOn(Adsr__ctx_type_1 &_ctx, int note, int velocity, int channel){
+}
+
+typedef Adsr__ctx_type_1 Adsr_noteOff_type;
+
+static_inline void Adsr_noteOff_init(Adsr__ctx_type_1 &_output_){
+   Adsr__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Adsr_noteOff(Adsr__ctx_type_1 &_ctx, int note, int channel){
+}
+
+typedef Adsr__ctx_type_1 Adsr_controlChange_type;
+
+static_inline void Adsr_controlChange_init(Adsr__ctx_type_1 &_output_){
+   Adsr__ctx_type_1_init(_output_);
+   return ;
+}
+
+void Adsr_controlChange(Adsr__ctx_type_1 &_ctx, int control, int value, int channel);
+
+typedef Adsr__ctx_type_1 Adsr_default_type;
+
+static_inline void Adsr_default_init(Adsr__ctx_type_1 &_output_){
+   Adsr__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Adsr_default(Adsr__ctx_type_1 &_ctx){
+   _ctx.knob1 = 0.0f;
+   _ctx.knob2 = 0.5f;
+   _ctx.knob3 = 1.f;
+   _ctx.knob4 = 0.5f;
+}
+
+static_inline float Saturate_soft_tanh_table_raw_c0(int index){
+   return Saturate_soft_tanh_table_c0[index];
+};
+
+static_inline float Saturate_soft_tanh_table_raw_c1(int index){
+   return Saturate_soft_tanh_table_c1[index];
+};
+
+static_inline float Saturate_soft_tanh_table_raw_c2(int index){
+   return Saturate_soft_tanh_table_c2[index];
+};
+
+static_inline float Saturate_soft_tanh_table(float x){
+   int index;
+   index = int_clip(float_to_int((5.f * (24.f + x))),0,240);
+   return (float_wrap_array(Saturate_soft_tanh_table_c0)[index] + (x * (float_wrap_array(Saturate_soft_tanh_table_c1)[index] + (x * float_wrap_array(Saturate_soft_tanh_table_c2)[index]))));
+}
+
+static_inline float Saturate_soft_process(float x){
+   return Saturate_soft_tanh_table(x);
+};
+
+static_inline void Saturate_soft_noteOn(int note, int velocity, int channel){
+}
+
+static_inline void Saturate_soft_noteOff(int note, int channel){
+}
+
+static_inline void Saturate_soft_controlChange(int control, int value, int channel){
+}
+
+static_inline void Saturate_soft_default(){
+}
+
+static_inline float Svf_calc_g_raw_c0(int index){
+   return Svf_calc_g_c0[index];
+};
+
+static_inline float Svf_calc_g_raw_c1(int index){
+   return Svf_calc_g_c1[index];
+};
+
+static_inline float Svf_calc_g_raw_c2(int index){
+   return Svf_calc_g_c2[index];
+};
+
+static_inline float Svf_calc_g(float cv){
+   int index;
+   index = int_clip(float_to_int((141.111111111f * cv)),0,127);
+   return (float_wrap_array(Svf_calc_g_c0)[index] + (cv * (float_wrap_array(Svf_calc_g_c1)[index] + (cv * float_wrap_array(Svf_calc_g_c2)[index]))));
+}
+
+typedef struct Svf__ctx_type_4 {
+   float z2;
+   float z1;
+   float inv_den;
+   float g;
+   Util__ctx_type_1 _inst23b;
+   Util__ctx_type_1 _inst13b;
+   float R;
+} Svf__ctx_type_4;
+
+typedef Svf__ctx_type_4 Svf_process_type;
+
+void Svf__ctx_type_4_init(Svf__ctx_type_4 &_output_);
+
+static_inline void Svf_process_init(Svf__ctx_type_4 &_output_){
+   Svf__ctx_type_4_init(_output_);
+   return ;
+}
+
+float Svf_process(Svf__ctx_type_4 &_ctx, float x, float cv, float q, int sel);
+
+typedef Svf__ctx_type_4 Svf_noteOn_type;
+
+static_inline void Svf_noteOn_init(Svf__ctx_type_4 &_output_){
+   Svf__ctx_type_4_init(_output_);
+   return ;
+}
+
+static_inline void Svf_noteOn(Svf__ctx_type_4 &_ctx, int note, int velocity, int channel){
+}
+
+typedef Svf__ctx_type_4 Svf_noteOff_type;
+
+static_inline void Svf_noteOff_init(Svf__ctx_type_4 &_output_){
+   Svf__ctx_type_4_init(_output_);
+   return ;
+}
+
+static_inline void Svf_noteOff(Svf__ctx_type_4 &_ctx, int note, int channel){
+}
+
+typedef Svf__ctx_type_4 Svf_controlChange_type;
+
+static_inline void Svf_controlChange_init(Svf__ctx_type_4 &_output_){
+   Svf__ctx_type_4_init(_output_);
+   return ;
+}
+
+static_inline void Svf_controlChange(Svf__ctx_type_4 &_ctx, int control, int value, int channel){
+}
+
+typedef Svf__ctx_type_4 Svf_default_type;
+
+static_inline void Svf_default_init(Svf__ctx_type_4 &_output_){
+   Svf__ctx_type_4_init(_output_);
+   return ;
+}
+
+static_inline void Svf_default(Svf__ctx_type_4 &_ctx){
+   _ctx.g = 0.0023297121342f;
+   _ctx.R = 1.f;
+   _ctx.inv_den = (1.f / (1.f + (_ctx.g * _ctx.g)));
+}
+
+typedef struct Sawcore__ctx_type_0 {
+   float ptr_w2_ret_1;
+   uint8_t ptr_w2_ret_0;
+} Sawcore__ctx_type_0;
+
+typedef Sawcore__ctx_type_0 Sawcore_ptr_w2_type;
+
+void Sawcore__ctx_type_0_init(Sawcore__ctx_type_0 &_output_);
+
+static_inline void Sawcore_ptr_w2_init(Sawcore__ctx_type_0 &_output_){
+   Sawcore__ctx_type_0_init(_output_);
+   return ;
+}
+
+void Sawcore_ptr_w2(Sawcore__ctx_type_0 &_ctx, float phase, float rate);
+
+typedef Sawcore__ctx_type_0 Sawcore_ptr_w2_ret_0_type;
+
+static_inline void Sawcore_ptr_w2_ret_0_init(Sawcore__ctx_type_0 &_output_){
+   Sawcore__ctx_type_0_init(_output_);
+   return ;
+}
+
+static_inline uint8_t Sawcore_ptr_w2_ret_0(Sawcore__ctx_type_0 &_ctx){
+   return _ctx.ptr_w2_ret_0;
+};
+
+typedef Sawcore__ctx_type_0 Sawcore_ptr_w2_ret_1_type;
+
+static_inline void Sawcore_ptr_w2_ret_1_init(Sawcore__ctx_type_0 &_output_){
+   Sawcore__ctx_type_0_init(_output_);
+   return ;
+}
+
+static_inline float Sawcore_ptr_w2_ret_1(Sawcore__ctx_type_0 &_ctx){
+   return _ctx.ptr_w2_ret_1;
+};
+
+typedef struct Sawcore__ctx_type_1 {
+   uint8_t reset_state;
+   float reset_phase;
+   float rate;
+   float phase;
+   Sawcore__ctx_type_0 _inst622;
+   Util__ctx_type_0 _inst351;
+   Util__ctx_type_1 _inst13b;
+} Sawcore__ctx_type_1;
+
+typedef Sawcore__ctx_type_1 Sawcore_process_type;
+
+void Sawcore__ctx_type_1_init(Sawcore__ctx_type_1 &_output_);
+
+static_inline void Sawcore_process_init(Sawcore__ctx_type_1 &_output_){
+   Sawcore__ctx_type_1_init(_output_);
+   return ;
+}
+
+float Sawcore_process(Sawcore__ctx_type_1 &_ctx, float cv, float reset);
+
+typedef Sawcore__ctx_type_1 Sawcore_noteOn_type;
+
+static_inline void Sawcore_noteOn_init(Sawcore__ctx_type_1 &_output_){
+   Sawcore__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Sawcore_noteOn(Sawcore__ctx_type_1 &_ctx, int note, int velocity, int channel){
+}
+
+typedef Sawcore__ctx_type_1 Sawcore_noteOff_type;
+
+static_inline void Sawcore_noteOff_init(Sawcore__ctx_type_1 &_output_){
+   Sawcore__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Sawcore_noteOff(Sawcore__ctx_type_1 &_ctx, int note, int channel){
+}
+
+typedef Sawcore__ctx_type_1 Sawcore_controlChange_type;
+
+static_inline void Sawcore_controlChange_init(Sawcore__ctx_type_1 &_output_){
+   Sawcore__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Sawcore_controlChange(Sawcore__ctx_type_1 &_ctx, int control, int value, int channel){
+}
+
+typedef Sawcore__ctx_type_1 Sawcore_default_type;
+
+static_inline void Sawcore_default_init(Sawcore__ctx_type_1 &_output_){
+   Sawcore__ctx_type_1_init(_output_);
+   return ;
+}
+
+static_inline void Sawcore_default(Sawcore__ctx_type_1 &_ctx){
+   _ctx.rate = 0.759366720147f;
+};
+
+static_inline float Saturate_tanh_table_raw_c0(int index){
+   return Saturate_tanh_table_c0[index];
+};
+
+static_inline float Saturate_tanh_table_raw_c1(int index){
+   return Saturate_tanh_table_c1[index];
+};
+
+static_inline float Saturate_tanh_table_raw_c2(int index){
+   return Saturate_tanh_table_c2[index];
+};
+
+static_inline float Saturate_tanh_table(float x){
+   int index;
+   index = int_clip(float_to_int((5.f * (24.f + x))),0,240);
+   return (float_wrap_array(Saturate_tanh_table_c0)[index] + (x * (float_wrap_array(Saturate_tanh_table_c1)[index] + (x * float_wrap_array(Saturate_tanh_table_c2)[index]))));
+}
+
+static_inline float Saturate_process(float x){
+   return Saturate_tanh_table(x);
+};
+
+static_inline void Saturate_noteOn(int note, int velocity, int channel){
+}
+
+static_inline void Saturate_noteOff(int note, int channel){
+}
+
+static_inline void Saturate_controlChange(int control, int value, int channel){
+}
+
+static_inline void Saturate_default(){
+}
+
+float Fold_do(float signal, float level);
+
+static_inline float Fold_process(float signal, float level){
+   return Fold_do(signal,level);
+};
+
+static_inline void Fold_noteOn(int note, int velocity, int channel){
+}
+
+static_inline void Fold_noteOff(int note, int channel){
+}
+
+static_inline void Fold_controlChange(int control, int value, int channel){
+}
+
+static_inline void Fold_default(){
+}
+
+typedef struct Aurora__ctx_type_0 {
+   float x4;
+   float x3;
+   float x2;
+} Aurora__ctx_type_0;
+
+typedef Aurora__ctx_type_0 Aurora_soft_type;
+
+void Aurora__ctx_type_0_init(Aurora__ctx_type_0 &_output_);
+
+static_inline void Aurora_soft_init(Aurora__ctx_type_0 &_output_){
+   Aurora__ctx_type_0_init(_output_);
+   return ;
+}
+
+float Aurora_soft(Aurora__ctx_type_0 &_ctx, float x1);
+
+typedef struct Aurora__ctx_type_1 {
+   float rate;
+   float phase;
+   Aurora__ctx_type_0 _inst560;
+   Util__ctx_type_0 _inst351;
+   Util__ctx_type_1 _inst13b;
+} Aurora__ctx_type_1;
+
+typedef Aurora__ctx_type_1 Aurora_lfo_type;
+
+void Aurora__ctx_type_1_init(Aurora__ctx_type_1 &_output_);
+
+static_inline void Aurora_lfo_init(Aurora__ctx_type_1 &_output_){
+   Aurora__ctx_type_1_init(_output_);
+   return ;
+}
+
+float Aurora_lfo(Aurora__ctx_type_1 &_ctx, float cv, float shape, float reset);
+
+typedef struct Aurora__ctx_type_2 {
+   float x;
+} Aurora__ctx_type_2;
+
+typedef Aurora__ctx_type_2 Aurora_smooth_cv_type;
+
+static_inline void Aurora__ctx_type_2_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2 _ctx;
+   _ctx.x = 0.0f;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Aurora_smooth_cv_init(Aurora__ctx_type_2 &_output_){
+   Aurora__ctx_type_2_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_smooth_cv(Aurora__ctx_type_2 &_ctx, float input){
+   _ctx.x = (_ctx.x + (0.001f * (input + (- _ctx.x))));
+   return _ctx.x;
+}
+
+typedef struct Aurora__ctx_type_3 {
+   float process_ret_5;
+   float process_ret_4;
+   float process_ret_3;
+   float process_ret_2;
+   float process_ret_1;
+   float process_ret_0;
+   float param8;
+   float param7;
+   float param6;
+   float param5;
+   float param4;
+   float param3;
+   float param2;
+   float param1;
+   Svf__ctx_type_4 _inst912;
+   Aurora__ctx_type_2 _inst8df;
+   Aurora__ctx_type_2 _inst7df;
+   Aurora__ctx_type_2 _inst6df;
+   Adsr__ctx_type_0 _inst56;
+   Adsr__ctx_type_0 _inst46;
+   Sawcore__ctx_type_1 _inst31b;
+   Sawcore__ctx_type_1 _inst21b;
+   Aurora__ctx_type_1 _inst196;
+} Aurora__ctx_type_3;
+
+typedef Aurora__ctx_type_3 Aurora_process_type;
+
+void Aurora__ctx_type_3_init(Aurora__ctx_type_3 &_output_);
+
+static_inline void Aurora_process_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+void Aurora_process(Aurora__ctx_type_3 &_ctx, float in1, float in2, float in3, float in4, float in5, float in6, float in7, float in8, float gate1, float gate2, float fs);
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_0_type;
+
+static_inline void Aurora_process_ret_0_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_0(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_0;
+};
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_1_type;
+
+static_inline void Aurora_process_ret_1_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_1(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_1;
+};
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_2_type;
+
+static_inline void Aurora_process_ret_2_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_2(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_2;
+};
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_3_type;
+
+static_inline void Aurora_process_ret_3_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_3(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_3;
+};
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_4_type;
+
+static_inline void Aurora_process_ret_4_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_4(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_4;
+};
+
+typedef Aurora__ctx_type_3 Aurora_process_ret_5_type;
+
+static_inline void Aurora_process_ret_5_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline float Aurora_process_ret_5(Aurora__ctx_type_3 &_ctx){
+   return _ctx.process_ret_5;
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam1_type;
+
+static_inline void Aurora_setParam1_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam1(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param1 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam2_type;
+
+static_inline void Aurora_setParam2_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam2(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param2 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam3_type;
+
+static_inline void Aurora_setParam3_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam3(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param3 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam4_type;
+
+static_inline void Aurora_setParam4_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam4(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param4 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam5_type;
+
+static_inline void Aurora_setParam5_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam5(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param5 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam6_type;
+
+static_inline void Aurora_setParam6_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam6(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param6 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam7_type;
+
+static_inline void Aurora_setParam7_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam7(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param7 = float_clip(knob,0.0f,1.f);
+};
+
+typedef Aurora__ctx_type_3 Aurora_setParam8_type;
+
+static_inline void Aurora_setParam8_init(Aurora__ctx_type_3 &_output_){
+   Aurora__ctx_type_3_init(_output_);
+   return ;
+}
+
+static_inline void Aurora_setParam8(Aurora__ctx_type_3 &_ctx, float knob){
+   _ctx.param8 = float_clip(knob,0.0f,1.f);
+};
+
 typedef struct Filter__ctx_type_0 {
    int x1;
 } Filter__ctx_type_0;
@@ -353,230 +961,6 @@ static_inline void Filter_ladder_init(Filter__ctx_type_8 &_output_){
 }
 
 float Filter_ladder(Filter__ctx_type_8 &_ctx, float input, float cut_in, float res_in);
-
-typedef struct Aurora__ctx_type_0 {
-   float x4;
-   float x3;
-   float x2;
-} Aurora__ctx_type_0;
-
-typedef Aurora__ctx_type_0 Aurora_soft_type;
-
-void Aurora__ctx_type_0_init(Aurora__ctx_type_0 &_output_);
-
-static_inline void Aurora_soft_init(Aurora__ctx_type_0 &_output_){
-   Aurora__ctx_type_0_init(_output_);
-   return ;
-}
-
-float Aurora_soft(Aurora__ctx_type_0 &_ctx, float x1);
-
-typedef struct Aurora__ctx_type_1 {
-   float rate;
-   float phase;
-   Aurora__ctx_type_0 _inst560;
-   Util__ctx_type_0 _inst351;
-   Util__ctx_type_1 _inst13b;
-} Aurora__ctx_type_1;
-
-typedef Aurora__ctx_type_1 Aurora_lfo_type;
-
-void Aurora__ctx_type_1_init(Aurora__ctx_type_1 &_output_);
-
-static_inline void Aurora_lfo_init(Aurora__ctx_type_1 &_output_){
-   Aurora__ctx_type_1_init(_output_);
-   return ;
-}
-
-float Aurora_lfo(Aurora__ctx_type_1 &_ctx, float cv, float shape, float reset);
-
-typedef struct Aurora__ctx_type_2 {
-   float process_ret_5;
-   float process_ret_4;
-   float process_ret_3;
-   float process_ret_2;
-   float process_ret_1;
-   float process_ret_0;
-   float param8;
-   float param7;
-   float param6;
-   float param5;
-   float param4;
-   float param3;
-   float param2;
-   float param1;
-   Filter__ctx_type_8 _inst6b8;
-   Filter__ctx_type_8 _inst5b8;
-   Aurora__ctx_type_1 _inst496;
-   Aurora__ctx_type_1 _inst396;
-   Aurora__ctx_type_1 _inst296;
-   Aurora__ctx_type_1 _inst196;
-} Aurora__ctx_type_2;
-
-typedef Aurora__ctx_type_2 Aurora_process_type;
-
-void Aurora__ctx_type_2_init(Aurora__ctx_type_2 &_output_);
-
-static_inline void Aurora_process_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-void Aurora_process(Aurora__ctx_type_2 &_ctx, float in1, float in2, float in3, float in4, float in5, float in6, float in7, float in8, float fs);
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_0_type;
-
-static_inline void Aurora_process_ret_0_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_0(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_0;
-};
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_1_type;
-
-static_inline void Aurora_process_ret_1_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_1(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_1;
-};
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_2_type;
-
-static_inline void Aurora_process_ret_2_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_2(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_2;
-};
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_3_type;
-
-static_inline void Aurora_process_ret_3_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_3(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_3;
-};
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_4_type;
-
-static_inline void Aurora_process_ret_4_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_4(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_4;
-};
-
-typedef Aurora__ctx_type_2 Aurora_process_ret_5_type;
-
-static_inline void Aurora_process_ret_5_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline float Aurora_process_ret_5(Aurora__ctx_type_2 &_ctx){
-   return _ctx.process_ret_5;
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam1_type;
-
-static_inline void Aurora_setParam1_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam1(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param1 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam2_type;
-
-static_inline void Aurora_setParam2_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam2(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param2 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam3_type;
-
-static_inline void Aurora_setParam3_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam3(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param3 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam4_type;
-
-static_inline void Aurora_setParam4_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam4(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param4 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam5_type;
-
-static_inline void Aurora_setParam5_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam5(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param5 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam6_type;
-
-static_inline void Aurora_setParam6_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam6(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param6 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam7_type;
-
-static_inline void Aurora_setParam7_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam7(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param7 = float_clip(knob,0.0f,1.f);
-};
-
-typedef Aurora__ctx_type_2 Aurora_setParam8_type;
-
-static_inline void Aurora_setParam8_init(Aurora__ctx_type_2 &_output_){
-   Aurora__ctx_type_2_init(_output_);
-   return ;
-}
-
-static_inline void Aurora_setParam8(Aurora__ctx_type_2 &_ctx, float knob){
-   _ctx.param8 = float_clip(knob,0.0f,1.f);
-};
 
 
 

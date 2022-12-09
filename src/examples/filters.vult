@@ -1,0 +1,7 @@
+
+fun change(x) {
+    mem pre_x;
+    val v = pre_x<>x;
+    pre_x = x;
+    return v;
+}

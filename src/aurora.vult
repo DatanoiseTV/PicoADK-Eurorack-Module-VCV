@@ -26,23 +26,43 @@ fun lfo(cv, shape, reset) {
    return soft(o);
 }
 
-fun process(in1:real, in2:real, in3:real, in4:real, in5:real, in6:real, in7:real, in8:real, fs:real) {
+fun smooth_cv(input:real) : real {
+   mem x;
+   x = x+(input-x)*0.001;
+   return x;
+}
+
+fun process(in1:real, in2:real, in3:real, in4:real, in5:real, in6:real, in7:real, in8:real, gate1:real, gate2:real,  fs:real) {
    mem param1, param2, param3, param4, param5, param6, param7, param8;
 
-   _ = param5;
-   _ = param6;
-   _ = param7;
-   _ = param8;
+// creates one LFO
+   val lfo_val = lfo(param1,gate1,0.0)*0.01;
 
-   val out1 = lfo(in1, 0.0, 0.0);
-   val out2 = lfo(param2, 0.0, 0.0);
-   val out3 = lfo(param3, 0.0, 0.0);
-   val out4 = lfo(param4, 0.0, 0.0);
+   // creates two oscillators
+   val o1 = Sawcore.process(in1, 0.0) * 0.5;
+   val o2 = Sawcore.process(in2-0.1, 0.0) * 0.5;
+   val osc_mix = o1 + o2;
 
-   // val audio_l = Filter.ladder(in1, param3, param4);
-   val audio_l = Filter.ladder(in1, Util.clip(param3+in3, 0.0, 1.0), param4);
-   val audio_r = Filter.ladder(in2, Util.clip(param3+in3, 0.0, 1.0), param4);
 
+   val env_vcf = Adsr.do(gate1, param1, param2*10.0, param5, param6) * 4.0;
+   val env_vca = Adsr.do(gate1, 0.0, 0.7, 0.8, 0.6) * 4.0;
+
+   val out1 = env_vcf;
+   val out2 = env_vca;
+   val out3 = lfo_val;
+   val out4 = 0.0;
+
+   val osc_out = Fold.process(osc_mix, smooth_cv(in3));
+   
+   val filter_frequency = clip(smooth_cv(param3)+(env_vcf), 0.0, 1.0);
+   val filter_out_pre = Svf.process(osc_out, filter_frequency, smooth_cv(param4)*5.5, 0);
+
+   //val filter_out_pre = Filter.ladder(osc_out, filter_frequency, smooth_cv(cv0));
+   val filter_out = Saturate.process(filter_out_pre);   
+
+   val mono_output = filter_out * env_vca;
+   val audio_l = mono_output;
+   val audio_r = mono_output;
    return audio_l, audio_r, out1, out2, out3, out4;
 }
 and setParam1(knob) {
