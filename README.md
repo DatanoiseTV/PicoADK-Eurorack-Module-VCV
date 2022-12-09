@@ -1,8 +1,7 @@
 
-![VultPlayground](/images/VultPlayground.png?raw=true "Vult Playground")
 
-
-Start-point to write your own plugins using the Vult language
+Start-point to write your own plugins for the Datanoise Aurora board using the Vult language
+and transfer them to the [real hardware](https://github.com/DatanoiseTV/-PicoADK-Eurorack-Module) later on.
 
 # How to use
 
