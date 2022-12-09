@@ -112,8 +112,7 @@ void Aurora::process(const ProcessArgs &args) {
    Aurora_process(aurora, in1, in2, in3, in4, in5, in6, in7, in8, args.sampleRate);
 
    outputs[AUDIO_L].setVoltage(Aurora_process_ret_0(aurora) * 10.0f);
-   outputs[AUDIO_R].setVoltage(Aurora_process_ret_1(aurora) * 10.0f);
-   
+
    outputs[OUT1].setVoltage(Aurora_process_ret_2(aurora) * 10.0f);
    outputs[OUT2].setVoltage(Aurora_process_ret_3(aurora) * 10.0f);
    outputs[OUT3].setVoltage(Aurora_process_ret_4(aurora) * 10.0f);

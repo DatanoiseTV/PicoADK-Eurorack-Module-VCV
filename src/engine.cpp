@@ -18,6 +18,86 @@ float Util_dcblock(Util__ctx_type_3 &_ctx, float x0){
    return y0;
 }
 
+void Filter__ctx_type_7_init(Filter__ctx_type_7 &_output_){
+   Filter__ctx_type_7 _ctx;
+   _ctx.p3 = 0.0f;
+   _ctx.p2 = 0.0f;
+   _ctx.p1 = 0.0f;
+   _ctx.p0 = 0.0f;
+   _output_ = _ctx;
+   return ;
+}
+
+float Filter_heun(Filter__ctx_type_7 &_ctx, float input, float fh, float res){
+   float wt0;
+   wt0 = Filter_clipper((input + (-4.f * _ctx.p3 * res)));
+   float dpt0;
+   dpt0 = (fh * (wt0 + (- _ctx.p0)));
+   float dpt1;
+   dpt1 = (fh * (_ctx.p0 + (- _ctx.p1)));
+   float dpt2;
+   dpt2 = (fh * (_ctx.p1 + (- _ctx.p2)));
+   float dpt3;
+   dpt3 = (fh * (_ctx.p2 + (- _ctx.p3)));
+   float pt0;
+   pt0 = (_ctx.p0 + dpt0);
+   float pt1;
+   pt1 = (_ctx.p1 + dpt1);
+   float pt2;
+   pt2 = (_ctx.p2 + dpt2);
+   float pt3;
+   pt3 = (_ctx.p3 + dpt3);
+   float w0;
+   w0 = Filter_clipper((input + (-4.f * pt3 * res)));
+   float dp0;
+   dp0 = (fh * (w0 + (- pt0)));
+   float dp1;
+   dp1 = (fh * (pt0 + (- pt1)));
+   float dp2;
+   dp2 = (fh * (pt1 + (- pt2)));
+   float dp3;
+   dp3 = (fh * (pt2 + (- pt3)));
+   _ctx.p0 = (_ctx.p0 + (0.5f * (dp0 + dpt0)));
+   _ctx.p1 = (_ctx.p1 + (0.5f * (dp1 + dpt1)));
+   _ctx.p2 = (_ctx.p2 + (0.5f * (dp2 + dpt2)));
+   _ctx.p3 = (_ctx.p3 + (0.5f * (dp3 + dpt3)));
+   return _ctx.p3;
+}
+
+void Filter__ctx_type_8_init(Filter__ctx_type_8 &_output_){
+   Filter__ctx_type_8 _ctx;
+   Filter__ctx_type_7_init(_ctx.h);
+   Filter__ctx_type_0_init(_ctx._inst2fa);
+   Util__ctx_type_4_init(_ctx._inst155);
+   _output_ = _ctx;
+   return ;
+}
+
+float Filter_ladder(Filter__ctx_type_8 &_ctx, float input, float cut_in, float res_in){
+   float res;
+   res = Filter_polylog(res_in);
+   float comp;
+   comp = Util_map(res,0.9f,1.f,0.0f,0.25f);
+   float limit;
+   if(comp > 0.0f){
+      limit = (0.9f + (- comp));
+   }
+   else
+   {
+      limit = 0.9f;
+   }
+   float cut;
+   cut = float_clip(cut_in,0.0f,limit);
+   float fh;
+   fh = Filter_tune(Util_smooth(_ctx._inst155,cut));
+   Filter_heun(_ctx.h,input,fh,res);
+   float noise;
+   noise = (0.005f * Filter_simple_noise(_ctx._inst2fa));
+   float out;
+   out = Filter_heun(_ctx.h,(input + noise),fh,(1.1f * res));
+   return out;
+}
+
 void Aurora__ctx_type_0_init(Aurora__ctx_type_0 &_output_){
    Aurora__ctx_type_0 _ctx;
    _ctx.x4 = 0.0f;
@@ -107,8 +187,8 @@ void Aurora__ctx_type_2_init(Aurora__ctx_type_2 &_output_){
    _ctx.param3 = 0.0f;
    _ctx.param2 = 0.0f;
    _ctx.param1 = 0.0f;
-   Aurora__ctx_type_1_init(_ctx._inst696);
-   Aurora__ctx_type_1_init(_ctx._inst596);
+   Filter__ctx_type_8_init(_ctx._inst6b8);
+   Filter__ctx_type_8_init(_ctx._inst5b8);
    Aurora__ctx_type_1_init(_ctx._inst496);
    Aurora__ctx_type_1_init(_ctx._inst396);
    Aurora__ctx_type_1_init(_ctx._inst296);
@@ -131,9 +211,9 @@ void Aurora_process(Aurora__ctx_type_2 &_ctx, float in1, float in2, float in3, f
    float out4;
    out4 = Aurora_lfo(_ctx._inst496,_ctx.param4,0.0f,0.0f);
    float audio_l;
-   audio_l = Aurora_lfo(_ctx._inst596,_ctx.param1,0.0f,0.0f);
+   audio_l = Filter_ladder(_ctx._inst5b8,in1,float_clip((_ctx.param3 + in3),0.0f,1.f),_ctx.param4);
    float audio_r;
-   audio_r = Aurora_lfo(_ctx._inst696,_ctx.param2,0.0f,0.0f);
+   audio_r = Filter_ladder(_ctx._inst6b8,in2,float_clip((_ctx.param3 + in3),0.0f,1.f),_ctx.param4);
    _ctx.process_ret_0 = audio_l;
    _ctx.process_ret_1 = audio_r;
    _ctx.process_ret_2 = out1;

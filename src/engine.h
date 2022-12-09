@@ -266,6 +266,94 @@ static_inline float Util_cvTokHz(float cv){
    return (float_wrap_array(Util_cvTokHz_c0)[index] + (cv * (float_wrap_array(Util_cvTokHz_c1)[index] + (cv * float_wrap_array(Util_cvTokHz_c2)[index]))));
 }
 
+typedef struct Filter__ctx_type_0 {
+   int x1;
+} Filter__ctx_type_0;
+
+typedef Filter__ctx_type_0 Filter_simple_noise_type;
+
+static_inline void Filter__ctx_type_0_init(Filter__ctx_type_0 &_output_){
+   Filter__ctx_type_0 _ctx;
+   _ctx.x1 = 0;
+   _output_ = _ctx;
+   return ;
+}
+
+static_inline void Filter_simple_noise_init(Filter__ctx_type_0 &_output_){
+   Filter__ctx_type_0_init(_output_);
+   return ;
+}
+
+static_inline float Filter_simple_noise(Filter__ctx_type_0 &_ctx){
+   _ctx.x1 = ((7919 + (17389 * _ctx.x1)) % 32768);
+   float y1;
+   y1 = (3.0517578125e-05f * int_to_float(_ctx.x1));
+   return y1;
+}
+
+static_inline float Filter_tune_raw_c0(int index){
+   return Filter_tune_c0[index];
+};
+
+static_inline float Filter_tune_raw_c1(int index){
+   return Filter_tune_c1[index];
+};
+
+static_inline float Filter_tune_raw_c2(int index){
+   return Filter_tune_c2[index];
+};
+
+static_inline float Filter_tune(float cut){
+   int index;
+   index = int_clip(float_to_int((127.f * cut)),0,127);
+   return (float_wrap_array(Filter_tune_c0)[index] + (cut * (float_wrap_array(Filter_tune_c1)[index] + (cut * float_wrap_array(Filter_tune_c2)[index]))));
+}
+
+static_inline float Filter_clipper(float x){
+   return float_clip(x,-1.f,1.f);
+};
+
+static_inline float Filter_polylog(float x){
+   float xx;
+   xx = float_clip(x,0.0f,1.f);
+   return (xx * (2.f + (- xx)));
+}
+
+typedef struct Filter__ctx_type_7 {
+   float p3;
+   float p2;
+   float p1;
+   float p0;
+} Filter__ctx_type_7;
+
+typedef Filter__ctx_type_7 Filter_heun_type;
+
+void Filter__ctx_type_7_init(Filter__ctx_type_7 &_output_);
+
+static_inline void Filter_heun_init(Filter__ctx_type_7 &_output_){
+   Filter__ctx_type_7_init(_output_);
+   return ;
+}
+
+float Filter_heun(Filter__ctx_type_7 &_ctx, float input, float fh, float res);
+
+typedef struct Filter__ctx_type_8 {
+   Filter__ctx_type_7 h;
+   Filter__ctx_type_0 _inst2fa;
+   Util__ctx_type_4 _inst155;
+} Filter__ctx_type_8;
+
+typedef Filter__ctx_type_8 Filter_ladder_type;
+
+void Filter__ctx_type_8_init(Filter__ctx_type_8 &_output_);
+
+static_inline void Filter_ladder_init(Filter__ctx_type_8 &_output_){
+   Filter__ctx_type_8_init(_output_);
+   return ;
+}
+
+float Filter_ladder(Filter__ctx_type_8 &_ctx, float input, float cut_in, float res_in);
+
 typedef struct Aurora__ctx_type_0 {
    float x4;
    float x3;
@@ -317,8 +405,8 @@ typedef struct Aurora__ctx_type_2 {
    float param3;
    float param2;
    float param1;
-   Aurora__ctx_type_1 _inst696;
-   Aurora__ctx_type_1 _inst596;
+   Filter__ctx_type_8 _inst6b8;
+   Filter__ctx_type_8 _inst5b8;
    Aurora__ctx_type_1 _inst496;
    Aurora__ctx_type_1 _inst396;
    Aurora__ctx_type_1 _inst296;

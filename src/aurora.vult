@@ -39,9 +39,9 @@ fun process(in1:real, in2:real, in3:real, in4:real, in5:real, in6:real, in7:real
    val out3 = lfo(param3, 0.0, 0.0);
    val out4 = lfo(param4, 0.0, 0.0);
 
-   val audio_l = lfo(param1, 0.0, 0.0);
-   val audio_r = lfo(param2, 0.0, 0.0);
-
+   // val audio_l = Filter.ladder(in1, param3, param4);
+   val audio_l = Filter.ladder(in1, Util.clip(param3+in3, 0.0, 1.0), param4);
+   val audio_r = Filter.ladder(in2, Util.clip(param3+in3, 0.0, 1.0), param4);
 
    return audio_l, audio_r, out1, out2, out3, out4;
 }
